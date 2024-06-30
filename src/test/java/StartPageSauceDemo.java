@@ -6,6 +6,8 @@ public class StartPageSauceDemo {
     private final By usernameField = By.id("user-name");
     private final By passwordField = By.id("password");
     private final By loginButton = By.id("login-button");
+    private final By addToCartButton = By.cssSelector(".btn_inventory");
+    private final By cartLink = By.cssSelector(".shopping_cart_link");
 
     public StartPageSauceDemo(WebDriver driver) {
         this.driver = driver;
@@ -25,7 +27,11 @@ public class StartPageSauceDemo {
         return driver.findElement(By.cssSelector("[data-test='error']")).getText();
     }
 
-    public String getPageTitle() {
-        return driver.getTitle();
+    public void clickAddToCartButton() {
+        driver.findElement(addToCartButton).click();
+    }
+
+    public void openCart() {
+        driver.findElement(cartLink).click();
     }
 }

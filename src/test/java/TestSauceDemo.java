@@ -7,51 +7,71 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertEquals;
 
-@Epic("SauceDemo тесты")
+@Epic("Тесты SauceDemo")
 @Feature("Вход")
 public class TestSauceDemo {
     WebDriver driver;
     StartPageSauceDemo startPage;
+    CartPageSauceDemo cartPage;
 
     @BeforeClass
     @Step("Инициализация драйвера")
     public void setUp() {
         driver = new ChromeDriver();
         startPage = new StartPageSauceDemo(driver);
+        cartPage = new CartPageSauceDemo(driver);
     }
 
     @Test
-    @Description("Негативная проверка логин")
-    public void nocorrectLog() {
+    @Description("Негативная проверка логина с неверным именем пользователя")
+    public void incorrectLogin() {
         startPage.openSite();
         startPage.logIn("Test", "secret_sauce");
         assertEquals(startPage.getErrorMessage(), "Epic sadface: Username and password do not match any user in this service", "Ошибка");
     }
 
     @Test
-    @Description("Негативная проверка пароль")
-    public void nocorrectPass() {
+    @Description("Негативная проверка логина с неверным паролем")
+    public void incorrectPassword() {
         startPage.openSite();
         startPage.logIn("standard_user", "Test");
         assertEquals(startPage.getErrorMessage(), "Epic sadface: Username and password do not match any user in this service", "Ошибка");
     }
 
     @Test
-    @Description("Проверка если в самом тесте неверно указан текст")
-    public void nocorrectPassbadExpected() {
+    @Description("Проверка с неверным ожидаемым текстом сообщения об ошибке")
+    public void incorrectExpectedErrorMessage() {
         startPage.openSite();
         startPage.logIn("standard_user", "Test");
         assertEquals(startPage.getErrorMessage(), "Test text", "Ошибка");
     }
 
     @Test
-    @Description("Проверка на пустой логин пароль")
-    public void cleanLogandPass() {
+    @Description("Проверка логина с пустым именем пользователя и паролем")
+    public void emptyUsernameAndPassword() {
         startPage.openSite();
         startPage.logIn("", "");
         assertEquals(startPage.getErrorMessage(), "Epic sadface: Username is required", "Ошибка");
+    }
+
+    @Test
+    @Description("Проверка добавления товара в корзину")
+    public void testAddItemToCart() {
+        startPage.openSite();
+        startPage.logIn("standard_user", "secret_sauce");
+
+        // Добавление товара в корзину
+        startPage.clickAddToCartButton();
+
+        // Открытие корзины
+        startPage.openCart();
+
+        // Проверка, что товар добавлен в корзину
+        assertEquals(cartPage.getCartItemsCount(), 1, "Товар не был добавлен в корзину");
+        assertEquals(cartPage.getCartBadgeText(), "1", "Значок корзины не показывает правильное количество товаров");
     }
 
     @AfterClass
