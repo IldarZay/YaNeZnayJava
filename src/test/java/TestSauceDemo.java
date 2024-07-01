@@ -63,13 +63,10 @@ public class TestSauceDemo {
         startPage.openSite();
         startPage.logIn("standard_user", "secret_sauce");
 
-        // Добавление товара в корзину
         startPage.clickAddToCartButton();
 
-        // Открытие корзины
         startPage.openCart();
 
-        // Проверка, что товар добавлен в корзину
         assertEquals(cartPage.getCartItemsCount(), 1, "Товар не был добавлен в корзину");
         assertEquals(cartPage.getCartBadgeText(), "1", "Значок корзины не показывает правильное количество товаров");
     }
